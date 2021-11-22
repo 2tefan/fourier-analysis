@@ -1,11 +1,15 @@
 google.charts.load("current", { packages: ["corechart"] });
 
 number = 11;
-T1 = 100 + 5 * number; // s
-T2 = T1 * 10;
 
-Vs = 0.8 + number / 100;
-targetValue = 10 + number;
+Tin = 20 + 2 * number; // ms
+signalHeight = 5 + number;
+Tmeasuring = 10 * Tin; // ms
+Tresolution = 1 / Tmeasuring; // kHz
+
+samplingInterval = 1; // ms
+numberOfHarmonics = 100;
+
 
 function getDefaultOptions(title) {
   return {
@@ -24,10 +28,9 @@ function getDefaultOptions(title) {
   };
 }
 
-function getDefaultOptionsDAC(title) {
+function getDefaultOptionsCurveTypeNone(title) {
   let options = getDefaultOptions(title);
   options.curveType = "none";
-  options.vAxis.title = "Value";
   return options;
 }
 
