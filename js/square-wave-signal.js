@@ -3,16 +3,16 @@ google.charts.setOnLoadCallback(drawPlainRect);
 function plainRect() {
   let arr = [];
 
-  let ft;
+  let ft = new Array(Tmeasuring);
 
   for (t = 0; t < Tmeasuring; t++) {
     if (t % (Tmeasuring / 10) < (Tmeasuring / 20)) {
-      ft = signalHeight;
+      ft[t] = signalHeight;
     } else {
-      ft = 0;
+      ft[t] = 0;
     }
 
-    arr.push([t, ft]);
+    arr.push([t, ft[t]]);
   }
 
   return arr;
