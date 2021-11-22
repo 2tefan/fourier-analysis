@@ -1,0 +1,31 @@
+.chart_section {
+  display: grid;
+  padding: 25px;
+  box-shadow: rgb(0, 0, 0) 0px 5px 10px 0px;
+  grid-template-areas: "headline" "chart" "properties";
+
+  h1 {
+    grid-area: headline;
+    padding: 0px;
+    margin: 0px;
+  }
+
+  table {
+    grid-area: properties;
+    width: 40%;
+    margin-left: auto;
+    margin-right: auto;
+
+    td, tr, th {
+      border: 1px solid black;
+      padding: 5px;
+    }
+  }
+}
+
+.chart {
+  height: 350px;
+  width: 100%;
+
+  grid-area: chart;
+}

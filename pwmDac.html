@@ -1,0 +1,93 @@
+<html>
+  <head>
+    <script
+      type="text/javascript"
+      src="https://www.gstatic.com/charts/loader.js"
+    ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Oswald&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+      crossorigin="anonymous"
+    ></script>
+
+    <link rel="stylesheet" href="css/main.css" />
+    <script type="text/javascript" src="js/scripts.js"></script>
+    <script type="text/javascript" src="js/pwnDac.js"></script>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Digitale Regler & DACs</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                aria-current="page"
+                href="regulatingDistance.html"
+                >Regelstrecke</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="twoPointRegulator.html"
+                >2-Punkt-Regler</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="piRegulator.html">PI-Regler</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="pidRegulator.html">PID-Regler</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="pwmDac.html">PWM-DAC</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="grid_container">
+      <section class="chart_section">
+        <h1>Zähler</h1>
+        <div id="count_out" class="chart"></div>
+      </section>
+      <section class="chart_section">
+        <h1>PWM</h1>
+        <div id="pwm_out" class="chart"></div>
+      </section>
+      <section class="chart_section">
+        <h1>Zähler (Sinus)</h1>
+        <div id="count_out_sin" class="chart"></div>
+      </section>
+      <section class="chart_section">
+        <h1>PWM-Ausgang (Sinus)</h1>
+        <div id="pwm_out_sin" class="chart"></div>
+      </section>
+    </div>
+  </body>
+</html>

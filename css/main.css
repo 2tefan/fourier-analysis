@@ -1,0 +1,55 @@
+.chart_section {
+  display: -ms-grid;
+  display: grid;
+  padding: 25px;
+  -webkit-box-shadow: black 0px 5px 10px 0px;
+          box-shadow: black 0px 5px 10px 0px;
+      grid-template-areas: "headline" "chart" "properties";
+}
+
+.chart_section h1 {
+  -ms-grid-row: 1;
+  -ms-grid-column: 1;
+  grid-area: headline;
+  padding: 0px;
+  margin: 0px;
+}
+
+.chart_section table {
+  -ms-grid-row: 3;
+  -ms-grid-column: 1;
+  grid-area: properties;
+  width: 40%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.chart_section table td, .chart_section table tr, .chart_section table th {
+  border: 1px solid black;
+  padding: 5px;
+}
+
+.chart {
+  height: 350px;
+  width: 100%;
+  -ms-grid-row: 2;
+  -ms-grid-column: 1;
+  grid-area: chart;
+}
+
+.grid_container {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (1fr)[1];
+      grid-template-columns: repeat(1, 1fr);
+  grid-row-gap: 30px;
+  padding: 10px;
+}
+
+body {
+  font-family: "Oswald", sans-serif;
+  padding: 0;
+  margin: 0;
+  font-size: 120%;
+}
+/*# sourceMappingURL=main.css.map */
