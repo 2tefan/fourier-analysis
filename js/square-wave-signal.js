@@ -1,22 +1,30 @@
 google.charts.setOnLoadCallback(drawPlainRect);
 google.charts.setOnLoadCallback(drawFourierRect);
 
-function plainRect() {
-  let arr = [];
+function getSignal(end = Tmeasuring) {
+  let arr = new Array(end);
 
-  let ft = new Array(Tmeasuring);
-
-  for (t = 0; t < Tmeasuring; t++) {
+  for (t = 0; t < end; t += samplingInterval) {
     if (t % Tin < Tin / 2) {
-      ft[t] = signalHeight;
+      arr[t] = signalHeight;
     } else {
-      ft[t] = 0;
+      arr[t] = 0;
     }
-    arr.push([t, ft[t]]);
+  }
+
+  return arr;
+}
+
+function plainRect() {
+  let arr = new Array(Tmeasuring);
+  let signal = getSignal(Tmeasuring);
+
+  for (t = 0; t < Tmeasuring; t += samplingInterval) {
+    arr[t] = [t, signal[t]];
   }
 
   $("#signal_plain_rect_period").text(formatFloat(Tin));
-  $("#signal_plain_rect_period").text(formatFloat(Tin));
+  $("#signal_plain_rect_amplitude").text(formatFloat(signalHeight));
   return arr;
 }
 
@@ -24,7 +32,6 @@ function drawPlainRect() {
   let data = new google.visualization.DataTable();
   data.addColumn("number", "t");
   data.addColumn("number", "Uout");
-  //data.addColumn("number", "dsadasout");
 
   data.addRows(plainRect());
 
@@ -39,23 +46,17 @@ function drawPlainRect() {
 
 function fourierRect() {
   let arr = [];
-
-  let ft = new Array(Tmeasuring);
-  let a = 0,
-    b = 0;
+  let ft = getSignal();
+  let a = 0;
+  let b = 0;
   let c = new Array(Tmeasuring);
   let phi = new Array(Tmeasuring);
   let k = 0;
 
-  for (t = 0; t < Tmeasuring; t++) {
-    if (t % (Tmeasuring / 10) < Tmeasuring / 20) {
-      ft[t] = signalHeight;
-    } else {
-      ft[t] = 0;
-    }
-  }
-
   for (k = 0; k < numberOfHarmonics; k++) {
+    a = 0;
+    b = 0;
+
     for (t = 0; t < Tmeasuring; t++) {
       a +=
         (2 / Tmeasuring) * ft[t] * Math.cos(2 * Math.PI * k * t * Tresolution);
@@ -64,8 +65,6 @@ function fourierRect() {
       c[k] = Math.sqrt(a * a + b * b);
       phi[k] = Math.atan(a / b);
     }
-    a = 0;
-    b = 0;
   }
 
   for (k = 0; k < numberOfHarmonics; k++) {
@@ -74,6 +73,7 @@ function fourierRect() {
 
   // drawPoint("Test", arr, 6, 3); //TODO
   //$("#signal_plain_rect_c").text(formatFloat(c[0]));
+  $("#signal_fourier_rect_measuring_time").text(formatFloat(Tmeasuring));
 
   return arr;
 }
