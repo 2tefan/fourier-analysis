@@ -20,9 +20,10 @@ function plainRect() {
   let signal = getSignal(Tmeasuring);
 
   for (t = 0; t < Tmeasuring; t += samplingInterval) {
-    arr[t] = [t, signal[t]];
+    arr[t] = [t, signal[t], null];
   }
 
+  drawPoint("𝜏", arr, Tin, 2);
   $("#signal_plain_rect_period").text(formatFloat(Tin));
   $("#signal_plain_rect_amplitude").text(formatFloat(signalHeight));
   return arr;
@@ -32,6 +33,7 @@ function drawPlainRect() {
   let data = new google.visualization.DataTable();
   data.addColumn("number", "t");
   data.addColumn("number", "Uout");
+  data.addColumn({ type: "string", role: "annotation" });
 
   data.addRows(plainRect());
 
@@ -68,11 +70,16 @@ function fourierRect() {
   }
 
   for (k = 0; k < numberOfHarmonics; k++) {
-    arr.push([k * Tresolution * 1000, c[k]]);
+    let value = c[k];
+    let pos = k * Tresolution * 1000;
+    let annotation = null;
+
+    if (value > 1)
+      annotation = "[" + formatFloat(pos) + "/" + formatFloat(value) + "]";
+
+    arr.push([pos, value, annotation]);
   }
 
-  // drawPoint("Test", arr, 6, 3); //TODO
-  //$("#signal_plain_rect_c").text(formatFloat(c[0]));
   $("#signal_fourier_rect_measuring_time").text(formatFloat(Tmeasuring));
 
   return arr;
@@ -82,7 +89,7 @@ function drawFourierRect() {
   let data = new google.visualization.DataTable();
   data.addColumn("number", "t");
   data.addColumn("number", "Uout");
-  //data.addColumn("number", "dsadasout");
+  data.addColumn({ role: "annotation" });
 
   data.addRows(fourierRect());
 
