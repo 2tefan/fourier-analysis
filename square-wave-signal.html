@@ -4,6 +4,8 @@
       type="text/javascript"
       src="https://www.gstatic.com/charts/loader.js"
     ></script>
+    <script src="node_modules/chart.js/dist/chart.min.js"></script>
+    <script src="node_modules/chartjs-plugin-annotation/dist/chartjs-plugin-annotation.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <link
@@ -59,8 +61,8 @@
 
     <div class="grid_container">
       <section class="chart_section">
-        <h1>Rechtecksignal</h1>
-        <div id="signal_plain_rect" class="chart"></div>
+        <h1>Rechtecksignal via Chart.js</h1>
+        <canvas id="signal_plain_rect" class="canvas_resize" height="800" width="2000"></canvas>
         <table>
           <tr>
             <th>Eigenschaft</th>

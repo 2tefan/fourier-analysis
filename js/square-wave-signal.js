@@ -1,5 +1,53 @@
-google.charts.setOnLoadCallback(drawPlainRect);
-google.charts.setOnLoadCallback(drawFourierRect);
+//google.charts.setOnLoadCallback(drawPlainRect);
+//google.charts.setOnLoadCallback(drawFourierRect);
+
+window.onresize = redraw;
+window.onload = init;
+
+function redraw() {
+  $(".canvas_resize").each(function (i, obj) {
+    $(this).css("width", "100%  ");
+  });
+}
+
+function init() {
+  initPlainRect()
+}
+
+function initPlainRect() {
+  let values = plainRect();
+
+  const ctx = $("#signal_plain_rect");
+  rectChart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: values[0],
+      datasets: [
+        {
+          label: "Vout",
+          data: values[1],
+          borderColor: "rgb(75, 192, 192)",
+          tension: 0,
+        },
+      ],
+    },
+    options: {
+      plugins: {
+        autocolors: false,
+        annotation: {
+          annotations: {
+            point1: {
+              type: 'point',
+              xValue: 1,
+              yValue: 10,
+              backgroundColor: 'rgba(255, 99, 132, 0.25)'
+            }
+          },
+        },
+      },
+    },
+  });
+}
 
 function getSignal(end = Tmeasuring) {
   let arr = new Array(end);
@@ -16,17 +64,17 @@ function getSignal(end = Tmeasuring) {
 }
 
 function plainRect() {
-  let arr = new Array(Tmeasuring);
+  let label = new Array(Tmeasuring);
   let signal = getSignal(Tmeasuring);
 
   for (t = 0; t < Tmeasuring; t += samplingInterval) {
-    arr[t] = [t, signal[t], null];
+    label[t] = t;
   }
 
-  drawPoint("𝜏", arr, Tin, 2);
+  //drawPoint("𝜏", arr, Tin, 2);
   $("#signal_plain_rect_period").text(formatFloat(Tin));
   $("#signal_plain_rect_amplitude").text(formatFloat(signalHeight));
-  return arr;
+  return [label, signal];
 }
 
 function drawPlainRect() {

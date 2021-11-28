@@ -1,8 +1,7 @@
 // compileCompressed: ../css/main.css
 
+@import "charts/_main_chart.scss";
 
-@import 'charts/_main_chart.scss';
+@import "layout/_grid_container";
 
-@import 'layout/_grid_container';
-
-@import 'main/_body.scss';
+@import "main/_body.scss";

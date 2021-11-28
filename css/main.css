@@ -24,9 +24,18 @@
   margin-right: auto;
 }
 
-.chart_section table td, .chart_section table tr, .chart_section table th {
+.chart_section table td,
+.chart_section table tr,
+.chart_section table th {
   border: 1px solid black;
   padding: 5px;
+}
+
+.chart_section canvas {
+  width: 80vw;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .chart {
