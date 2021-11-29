@@ -6,6 +6,7 @@
     ></script>
     <script src="node_modules/chart.js/dist/chart.min.js"></script>
     <script src="node_modules/chartjs-plugin-annotation/dist/chartjs-plugin-annotation.min.js"></script>
+    <script src="node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <link
@@ -61,8 +62,11 @@
 
     <div class="grid_container">
       <section class="chart_section">
-        <h1>Rechtecksignal via Chart.js</h1>
-        <canvas id="signal_plain_rect" class="canvas_resize" height="800" width="2000"></canvas>
+        <h1>Rechtecksignal</h1>
+        <div class="chart-container">
+          <canvas id="signal_plain_rect"></canvas>
+      </div>
+      
         <table>
           <tr>
             <th>Eigenschaft</th>

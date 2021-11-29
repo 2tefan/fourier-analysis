@@ -1,21 +1,42 @@
-//google.charts.setOnLoadCallback(drawPlainRect);
-//google.charts.setOnLoadCallback(drawFourierRect);
-
 window.onresize = redraw;
 window.onload = init;
+Chart.register(ChartDataLabels);
 
 function redraw() {
   $(".canvas_resize").each(function (i, obj) {
-    $(this).css("width", "100%  ");
+    $(this).css("width", "100%");
   });
 }
 
 function init() {
-  initPlainRect()
+  initPlainRect();
 }
 
 function initPlainRect() {
   let values = plainRect();
+  let options = getDefaultOptions();
+
+  options.plugins = {
+    datalabels: {
+      display: false
+    },
+    annotation: {
+      annotations: {
+        annotation_at_period: {
+          type: "line",
+          scaleID: "x",
+          value: Tin,
+          borderColor: "black",
+          borderWidth: 5,
+          label: {
+            backgroundColor: "red",
+            content: "𝜏 = " + Tin,
+            enabled: true,
+          },
+        },
+      },
+    },
+  };
 
   const ctx = $("#signal_plain_rect");
   rectChart = new Chart(ctx, {
@@ -31,21 +52,7 @@ function initPlainRect() {
         },
       ],
     },
-    options: {
-      plugins: {
-        autocolors: false,
-        annotation: {
-          annotations: {
-            point1: {
-              type: 'point',
-              xValue: 1,
-              yValue: 10,
-              backgroundColor: 'rgba(255, 99, 132, 0.25)'
-            }
-          },
-        },
-      },
-    },
+    options: options,
   });
 }
 
@@ -71,7 +78,6 @@ function plainRect() {
     label[t] = t;
   }
 
-  //drawPoint("𝜏", arr, Tin, 2);
   $("#signal_plain_rect_period").text(formatFloat(Tin));
   $("#signal_plain_rect_amplitude").text(formatFloat(signalHeight));
   return [label, signal];

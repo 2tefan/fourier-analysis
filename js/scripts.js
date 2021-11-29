@@ -10,20 +10,23 @@ Tresolution = 1 / Tmeasuring; // kHz
 samplingInterval = 1; // ms
 numberOfHarmonics = 100;
 
-
-function getDefaultOptions(title) {
+function getDefaultOptions() {
   return {
-    title: title,
-    curveType: "function",
-    legend: { position: "bottom" },
-    hAxis: {
-      title: "Time [ms]",
-      gridlines: { interval: [1, 2, 5], count: 8 },
-      minorGridlines: { interval: 0.5 },
-    },
-    vAxis: {
-      title: "Voltage [V]",
-      gridlines: { interval: [1, 2, 5], count: 8 },
+    aspectRatio: 5,
+    radius: 0,
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: "Zeit [ms]",
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: "Spannung [V]",
+        },
+      },
     },
   };
 }

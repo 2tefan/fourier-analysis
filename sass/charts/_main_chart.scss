@@ -24,17 +24,10 @@
     }
   }
 
-  canvas {
-    width: 80vw;
-    display: block;
+  .chart-container {
+    width: 100%;
     margin-left: auto;
     margin-right: auto;
+    grid-area: chart;
   }
-}
-
-.chart {
-  height: 350px;
-  width: 100%;
-
-  grid-area: chart;
 }
