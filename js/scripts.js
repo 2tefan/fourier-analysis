@@ -28,6 +28,11 @@ function getDefaultOptions() {
         },
       },
     },
+    plugins: {
+      datalabels: {
+        display: false,
+      },
+    },
   };
 }
 

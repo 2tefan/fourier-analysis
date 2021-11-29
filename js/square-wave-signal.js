@@ -16,23 +16,18 @@ function initPlainRect() {
   let values = plainRect();
   let options = getDefaultOptions();
 
-  options.plugins = {
-    datalabels: {
-      display: false
-    },
-    annotation: {
-      annotations: {
-        annotation_at_period: {
-          type: "line",
-          scaleID: "x",
-          value: Tin,
-          borderColor: "black",
-          borderWidth: 5,
-          label: {
-            backgroundColor: "red",
-            content: "𝜏 = " + Tin,
-            enabled: true,
-          },
+  options.plugins.annotation = {
+    annotations: {
+      annotation_at_period: {
+        type: "line",
+        scaleID: "x",
+        value: Tin,
+        borderColor: "black",
+        borderWidth: 5,
+        label: {
+          backgroundColor: "red",
+          content: "𝜏 = " + Tin,
+          enabled: true,
         },
       },
     },
@@ -81,23 +76,6 @@ function plainRect() {
   $("#signal_plain_rect_period").text(formatFloat(Tin));
   $("#signal_plain_rect_amplitude").text(formatFloat(signalHeight));
   return [label, signal];
-}
-
-function drawPlainRect() {
-  let data = new google.visualization.DataTable();
-  data.addColumn("number", "t");
-  data.addColumn("number", "Uout");
-  data.addColumn({ type: "string", role: "annotation" });
-
-  data.addRows(plainRect());
-
-  let options = getDefaultOptionsCurveTypeNone("Rechtecksignal");
-
-  let chart = new google.visualization.LineChart(
-    document.getElementById("signal_plain_rect")
-  );
-
-  chart.draw(data, options);
 }
 
 function fourierRect() {
