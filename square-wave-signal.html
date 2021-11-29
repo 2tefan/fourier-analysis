@@ -4,6 +4,9 @@
       type="text/javascript"
       src="https://www.gstatic.com/charts/loader.js"
     ></script>
+    <script src="node_modules/chart.js/dist/chart.min.js"></script>
+    <script src="node_modules/chartjs-plugin-annotation/dist/chartjs-plugin-annotation.min.js"></script>
+    <script src="node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <link
@@ -60,7 +63,10 @@
     <div class="grid_container">
       <section class="chart_section">
         <h1>Rechtecksignal</h1>
-        <div id="signal_plain_rect" class="chart"></div>
+        <div class="chart-container">
+          <canvas id="signal_plain_rect"></canvas>
+        </div>
+
         <table>
           <tr>
             <th>Eigenschaft</th>
@@ -79,7 +85,9 @@
 
       <section class="chart_section">
         <h1>Fourier Analyse</h1>
-        <div id="signal_fourier_rect" class="chart"></div>
+        <div class="chart-container">
+          <canvas id="signal_fourier_rect"></canvas>
+        </div>
         <table>
           <tr>
             <th>Eigenschaft</th>

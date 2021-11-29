@@ -10,28 +10,101 @@ Tresolution = 1 / Tmeasuring; // kHz
 samplingInterval = 1; // ms
 numberOfHarmonics = 100;
 
-
-function getDefaultOptions(title) {
+function getDefaultOptions(titleX) {
   return {
-    title: title,
-    curveType: "function",
-    legend: { position: "bottom" },
-    hAxis: {
-      title: "Time [ms]",
-      gridlines: { interval: [1, 2, 5], count: 8 },
-      minorGridlines: { interval: 0.5 },
+    aspectRatio: 5,
+    radius: 0,
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: titleX,
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: "Spannung [V]",
+        },
+      },
     },
-    vAxis: {
-      title: "Voltage [V]",
-      gridlines: { interval: [1, 2, 5], count: 8 },
+    plugins: {
+      datalabels: {
+        display: false,
+      },
     },
   };
 }
 
-function getDefaultOptionsCurveTypeNone(title) {
-  let options = getDefaultOptions(title);
-  options.curveType = "none";
+function getDefaultOptionsFourier(titleX) {
+  let options = getDefaultOptions(titleX);
+
+  options.scales.x.ticks = {
+    callback: function (value, index, values) {
+      return index % 2 ? null : value + " kHz";
+    },
+  };
+
+  options.scales.y.max = signalHeight * 1.5;
+
+  options.plugins.datalabels = {
+    formatter: function (value, context) {
+      return (
+        formatFloat(context.chart.data.labels[context.dataIndex]) +
+        " kHz\n" +
+        formatFloat(value) +
+        " V"
+      );
+    },
+    align: "end",
+    anchor: "end",
+    backgroundColor: "#F2F2F2",
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: "#1E2C53",
+    padding: 4,
+    offset: 20,
+    color: "#1E2C53",
+    display: function (context) {
+      return context.dataset.data[context.dataIndex] > 1;
+    },
+  };
   return options;
+}
+
+function prepareAnnotations(options) {
+  options.plugins.annotation = {
+    annotations: {},
+  };
+}
+
+function addAnnotationX(options, name, value, text) {
+  options.plugins.annotation.annotations[name] = {
+    type: "line",
+    scaleID: "x",
+    value: value,
+    borderColor: "black",
+    borderWidth: 5,
+    label: {
+      backgroundColor: "red",
+      content: text,
+      enabled: true,
+    },
+  };
+}
+
+function getData(label, values) {
+  return {
+    labels: label,
+    datasets: [
+      {
+        label: "Vout",
+        data: values,
+        borderColor: "rgb(75, 192, 192)",
+        tension: 0,
+      },
+    ],
+  };
 }
 
 function drawPoint(name, arr, time, pos = 3) {

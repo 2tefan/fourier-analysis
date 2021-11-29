@@ -24,14 +24,17 @@
   margin-right: auto;
 }
 
-.chart_section table td, .chart_section table tr, .chart_section table th {
+.chart_section table td,
+.chart_section table tr,
+.chart_section table th {
   border: 1px solid black;
   padding: 5px;
 }
 
-.chart {
-  height: 350px;
-  width: 100%;
+.chart_section .chart-container {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
   -ms-grid-row: 2;
   -ms-grid-column: 1;
   grid-area: chart;

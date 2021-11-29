@@ -1,5 +1,43 @@
-google.charts.setOnLoadCallback(drawPlainRect);
-google.charts.setOnLoadCallback(drawFourierRect);
+window.onresize = redraw;
+window.onload = init;
+Chart.register(ChartDataLabels);
+
+function redraw() {
+  $(".canvas_resize").each(function (i, obj) {
+    $(this).css("width", "100%");
+  });
+}
+
+function init() {
+  initPlainRect();
+  initFourierRect();
+}
+
+function initPlainRect() {
+  const ctx = $("#signal_plain_rect");
+  let values = plainRect();
+  let options = getDefaultOptions("Zeit [ms]");
+  prepareAnnotations(options);
+  addAnnotationX(options, "𝜏", Tin, "𝜏 = " + Tin);
+
+  let chart = new Chart(ctx, {
+    type: "line",
+    data: getData(values[0], values[1]),
+    options: options,
+  });
+}
+
+function initFourierRect() {
+  const ctx = $("#signal_fourier_rect");
+  let values = fourierRect();
+  let options = getDefaultOptionsFourier("Frequenz [kHz]");
+
+  let chart = new Chart(ctx, {
+    type: "bar",
+    data: getData(values[0], values[1]),
+    options: options,
+  });
+}
 
 function getSignal(end = Tmeasuring) {
   let arr = new Array(end);
@@ -16,38 +54,21 @@ function getSignal(end = Tmeasuring) {
 }
 
 function plainRect() {
-  let arr = new Array(Tmeasuring);
+  let label = new Array(Tmeasuring);
   let signal = getSignal(Tmeasuring);
 
   for (t = 0; t < Tmeasuring; t += samplingInterval) {
-    arr[t] = [t, signal[t], null];
+    label[t] = t;
   }
 
-  drawPoint("𝜏", arr, Tin, 2);
   $("#signal_plain_rect_period").text(formatFloat(Tin));
   $("#signal_plain_rect_amplitude").text(formatFloat(signalHeight));
-  return arr;
-}
-
-function drawPlainRect() {
-  let data = new google.visualization.DataTable();
-  data.addColumn("number", "t");
-  data.addColumn("number", "Uout");
-  data.addColumn({ type: "string", role: "annotation" });
-
-  data.addRows(plainRect());
-
-  let options = getDefaultOptionsCurveTypeNone("Rechtecksignal");
-
-  let chart = new google.visualization.LineChart(
-    document.getElementById("signal_plain_rect")
-  );
-
-  chart.draw(data, options);
+  return [label, signal];
 }
 
 function fourierRect() {
-  let arr = [];
+  let label = [];
+  let fourier = [];
   let ft = getSignal();
   let a = 0;
   let b = 0;
@@ -72,17 +93,14 @@ function fourierRect() {
   for (k = 0; k < numberOfHarmonics; k++) {
     let value = c[k];
     let pos = k * Tresolution * 1000;
-    let annotation = null;
 
-    if (value > 1)
-      annotation = "[" + formatFloat(pos) + "/" + formatFloat(value) + "]";
-
-    arr.push([pos, value, annotation]);
+    label.push(pos);
+    fourier.push(value);
   }
 
   $("#signal_fourier_rect_measuring_time").text(formatFloat(Tmeasuring));
 
-  return arr;
+  return [label, fourier];
 }
 
 function drawFourierRect() {
@@ -97,53 +115,6 @@ function drawFourierRect() {
 
   let chart = new google.visualization.ColumnChart(
     document.getElementById("signal_fourier_rect")
-  );
-
-  chart.draw(data, options);
-}
-
-function drawPIDRegulator() {
-  let data = new google.visualization.DataTable();
-  data.addColumn("number", "t");
-  data.addColumn("number", "Uout");
-  data.addColumn("number", "Rise");
-  data.addColumn({ type: "string", role: "annotation" });
-  data.addColumn("number", "Max");
-  data.addColumn({ type: "string", role: "annotation" });
-  data.addColumn("number", "Min");
-  data.addColumn({ type: "string", role: "annotation" });
-  data.addColumn("number", "control deviation");
-  data.addColumn({ type: "string", role: "annotation" });
-  data.addColumn("number", "Target value");
-
-  data.addRows(pidRegulator());
-
-  let options = getDefaultOptions("PID-Regulator");
-  options.series = {
-    1: {
-      pointSize: 5,
-      visibleInLegend: false,
-    },
-    2: {
-      pointSize: 5,
-      visibleInLegend: false,
-    },
-    3: {
-      pointSize: 5,
-      visibleInLegend: false,
-    },
-    4: {
-      pointSize: 5,
-      visibleInLegend: false,
-    },
-  };
-
-  options.annotations = {
-    fontSize: 15,
-  };
-
-  let chart = new google.visualization.LineChart(
-    document.getElementById("pid_regulator")
   );
 
   chart.draw(data, options);

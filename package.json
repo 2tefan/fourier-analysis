@@ -1,0 +1,25 @@
+{
+  "name": "fourieranalyse",
+  "version": "1.0.0",
+  "description": "Based on [digital-regulator-and-dac-js](https://gitlab.com/2tefan/digital-regulator-js)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/2tefan/fourier-analysis.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/2tefan/fourier-analysis/issues"
+  },
+  "homepage": "https://gitlab.com/2tefan/fourier-analysis#readme",
+  "dependencies": {
+    "chart.js": "^3.6.0",
+    "chartjs-plugin-annotation": "^1.1.0",
+    "chartjs-plugin-datalabels": "^2.0.0",
+    "http-server": "^14.0.0"
+  }
+}
