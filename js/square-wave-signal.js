@@ -17,23 +17,8 @@ function initPlainRect() {
   const ctx = $("#signal_plain_rect");
   let values = plainRect();
   let options = getDefaultOptions("Zeit [ms]");
-
-  options.plugins.annotation = {
-    annotations: {
-      annotation_at_period: {
-        type: "line",
-        scaleID: "x",
-        value: Tin,
-        borderColor: "black",
-        borderWidth: 5,
-        label: {
-          backgroundColor: "red",
-          content: "𝜏 = " + Tin,
-          enabled: true,
-        },
-      },
-    },
-  };
+  prepareAnnotations(options);
+  addAnnotationX(options, "𝜏", Tin, "𝜏 = " + Tin);
 
   let chart = new Chart(ctx, {
     type: "line",

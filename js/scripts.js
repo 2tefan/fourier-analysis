@@ -56,8 +56,8 @@ function getDefaultOptionsFourier(titleX) {
         " V"
       );
     },
-    align: 'end',
-    anchor: 'end',
+    align: "end",
+    anchor: "end",
     backgroundColor: "#F2F2F2",
     borderRadius: 5,
     borderWidth: 2,
@@ -72,8 +72,28 @@ function getDefaultOptionsFourier(titleX) {
   return options;
 }
 
-function getData(label, values)
-{
+function prepareAnnotations(options) {
+  options.plugins.annotation = {
+    annotations: {},
+  };
+}
+
+function addAnnotationX(options, name, value, text) {
+  options.plugins.annotation.annotations[name] = {
+    type: "line",
+    scaleID: "x",
+    value: value,
+    borderColor: "black",
+    borderWidth: 5,
+    label: {
+      backgroundColor: "red",
+      content: text,
+      enabled: true,
+    },
+  };
+}
+
+function getData(label, values) {
   return {
     labels: label,
     datasets: [
