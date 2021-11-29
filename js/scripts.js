@@ -10,7 +10,7 @@ Tresolution = 1 / Tmeasuring; // kHz
 samplingInterval = 1; // ms
 numberOfHarmonics = 100;
 
-function getDefaultOptions() {
+function getDefaultOptions(titleX) {
   return {
     aspectRatio: 5,
     radius: 0,
@@ -18,7 +18,7 @@ function getDefaultOptions() {
       x: {
         title: {
           display: true,
-          text: "Zeit [ms]",
+          text: titleX,
         },
       },
       y: {

@@ -10,11 +10,13 @@ function redraw() {
 
 function init() {
   initPlainRect();
+  initFourierRect();
 }
 
 function initPlainRect() {
+  const ctx = $("#signal_plain_rect");
   let values = plainRect();
-  let options = getDefaultOptions();
+  let options = getDefaultOptions("Zeit [ms]");
 
   options.plugins.annotation = {
     annotations: {
@@ -33,9 +35,60 @@ function initPlainRect() {
     },
   };
 
-  const ctx = $("#signal_plain_rect");
   rectChart = new Chart(ctx, {
     type: "line",
+    data: {
+      labels: values[0],
+      datasets: [
+        {
+          label: "Vout",
+          data: values[1],
+          borderColor: "rgb(75, 192, 192)",
+          tension: 0,
+        },
+      ],
+    },
+    options: options,
+  });
+}
+
+function initFourierRect() {
+  const ctx = $("#signal_fourier_rect");
+  let values = fourierRect();
+  let options = getDefaultOptions("Frequenz [kHz]");
+
+  options.scales.x.ticks = {
+    callback: function (value, index, values) {
+      return index % 2 ? null : value + " kHz";
+    },
+  };
+
+  options.scales.y.max = signalHeight * 1.5;
+
+  options.plugins.datalabels = {
+    formatter: function (value, context) {
+      return (
+        formatFloat(context.chart.data.labels[context.dataIndex]) +
+        " kHz\n" +
+        formatFloat(value) +
+        " V"
+      );
+    },
+    align: 'end',
+    anchor: 'end',
+    backgroundColor: "#F2F2F2",
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: "#1E2C53",
+    padding: 4,
+    offset: 20,
+    color: "#1E2C53",
+    display: function (context) {
+      return context.dataset.data[context.dataIndex] > 1; // display labels with an odd index
+    },
+  };
+  rectChart = new Chart(ctx, {
+    type: "bar",
     data: {
       labels: values[0],
       datasets: [
@@ -79,7 +132,8 @@ function plainRect() {
 }
 
 function fourierRect() {
-  let arr = [];
+  let label = [];
+  let fourier = [];
   let ft = getSignal();
   let a = 0;
   let b = 0;
@@ -104,17 +158,14 @@ function fourierRect() {
   for (k = 0; k < numberOfHarmonics; k++) {
     let value = c[k];
     let pos = k * Tresolution * 1000;
-    let annotation = null;
 
-    if (value > 1)
-      annotation = "[" + formatFloat(pos) + "/" + formatFloat(value) + "]";
-
-    arr.push([pos, value, annotation]);
+    label.push(pos);
+    fourier.push(value);
   }
 
   $("#signal_fourier_rect_measuring_time").text(formatFloat(Tmeasuring));
 
-  return arr;
+  return [label, fourier];
 }
 
 function drawFourierRect() {
@@ -129,53 +180,6 @@ function drawFourierRect() {
 
   let chart = new google.visualization.ColumnChart(
     document.getElementById("signal_fourier_rect")
-  );
-
-  chart.draw(data, options);
-}
-
-function drawPIDRegulator() {
-  let data = new google.visualization.DataTable();
-  data.addColumn("number", "t");
-  data.addColumn("number", "Uout");
-  data.addColumn("number", "Rise");
-  data.addColumn({ type: "string", role: "annotation" });
-  data.addColumn("number", "Max");
-  data.addColumn({ type: "string", role: "annotation" });
-  data.addColumn("number", "Min");
-  data.addColumn({ type: "string", role: "annotation" });
-  data.addColumn("number", "control deviation");
-  data.addColumn({ type: "string", role: "annotation" });
-  data.addColumn("number", "Target value");
-
-  data.addRows(pidRegulator());
-
-  let options = getDefaultOptions("PID-Regulator");
-  options.series = {
-    1: {
-      pointSize: 5,
-      visibleInLegend: false,
-    },
-    2: {
-      pointSize: 5,
-      visibleInLegend: false,
-    },
-    3: {
-      pointSize: 5,
-      visibleInLegend: false,
-    },
-    4: {
-      pointSize: 5,
-      visibleInLegend: false,
-    },
-  };
-
-  options.annotations = {
-    fontSize: 15,
-  };
-
-  let chart = new google.visualization.LineChart(
-    document.getElementById("pid_regulator")
   );
 
   chart.draw(data, options);
