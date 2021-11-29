@@ -36,10 +36,55 @@ function getDefaultOptions(titleX) {
   };
 }
 
-function getDefaultOptionsCurveTypeNone(title) {
-  let options = getDefaultOptions(title);
-  options.curveType = "none";
+function getDefaultOptionsFourier(titleX) {
+  let options = getDefaultOptions(titleX);
+
+  options.scales.x.ticks = {
+    callback: function (value, index, values) {
+      return index % 2 ? null : value + " kHz";
+    },
+  };
+
+  options.scales.y.max = signalHeight * 1.5;
+
+  options.plugins.datalabels = {
+    formatter: function (value, context) {
+      return (
+        formatFloat(context.chart.data.labels[context.dataIndex]) +
+        " kHz\n" +
+        formatFloat(value) +
+        " V"
+      );
+    },
+    align: 'end',
+    anchor: 'end',
+    backgroundColor: "#F2F2F2",
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: "#1E2C53",
+    padding: 4,
+    offset: 20,
+    color: "#1E2C53",
+    display: function (context) {
+      return context.dataset.data[context.dataIndex] > 1;
+    },
+  };
   return options;
+}
+
+function getData(label, values)
+{
+  return {
+    labels: label,
+    datasets: [
+      {
+        label: "Vout",
+        data: values,
+        borderColor: "rgb(75, 192, 192)",
+        tension: 0,
+      },
+    ],
+  };
 }
 
 function drawPoint(name, arr, time, pos = 3) {

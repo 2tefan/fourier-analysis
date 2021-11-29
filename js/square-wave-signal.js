@@ -35,19 +35,9 @@ function initPlainRect() {
     },
   };
 
-  rectChart = new Chart(ctx, {
+  let chart = new Chart(ctx, {
     type: "line",
-    data: {
-      labels: values[0],
-      datasets: [
-        {
-          label: "Vout",
-          data: values[1],
-          borderColor: "rgb(75, 192, 192)",
-          tension: 0,
-        },
-      ],
-    },
+    data: getData(values[0], values[1]),
     options: options,
   });
 }
@@ -55,51 +45,11 @@ function initPlainRect() {
 function initFourierRect() {
   const ctx = $("#signal_fourier_rect");
   let values = fourierRect();
-  let options = getDefaultOptions("Frequenz [kHz]");
+  let options = getDefaultOptionsFourier("Frequenz [kHz]");
 
-  options.scales.x.ticks = {
-    callback: function (value, index, values) {
-      return index % 2 ? null : value + " kHz";
-    },
-  };
-
-  options.scales.y.max = signalHeight * 1.5;
-
-  options.plugins.datalabels = {
-    formatter: function (value, context) {
-      return (
-        formatFloat(context.chart.data.labels[context.dataIndex]) +
-        " kHz\n" +
-        formatFloat(value) +
-        " V"
-      );
-    },
-    align: 'end',
-    anchor: 'end',
-    backgroundColor: "#F2F2F2",
-    borderRadius: 5,
-    borderWidth: 2,
-    borderColor: "#1E2C53",
-    padding: 4,
-    offset: 20,
-    color: "#1E2C53",
-    display: function (context) {
-      return context.dataset.data[context.dataIndex] > 1; // display labels with an odd index
-    },
-  };
-  rectChart = new Chart(ctx, {
+  let chart = new Chart(ctx, {
     type: "bar",
-    data: {
-      labels: values[0],
-      datasets: [
-        {
-          label: "Vout",
-          data: values[1],
-          borderColor: "rgb(75, 192, 192)",
-          tension: 0,
-        },
-      ],
-    },
+    data: getData(values[0], values[1]),
     options: options,
   });
 }
