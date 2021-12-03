@@ -76,6 +76,7 @@ function plainRect() {
   }
 
   $("#signal_plain_rect_period").text(formatFloat(Tin));
+  $("#signal_plain_rect_frequency").text(formatFloat(1000 / Tin));
   $("#signal_plain_rect_amplitude").text(formatFloat(signalHeight));
   return [label, signal];
 }
