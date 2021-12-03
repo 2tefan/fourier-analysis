@@ -106,6 +106,7 @@ function fourierRect() {
       phi[k] = Math.atan(a / b);
     }
   }
+  c[0] = c[0] / 2;
 
   for (k = 0; k < numberOfHarmonics; k++) {
     let value = c[k];
@@ -130,7 +131,7 @@ function reconstructedSignal(poiFromFourier) {
 
   for (t = 0; t < Tmeasuring; t += samplingInterval) {
     label[t] = t;
-    signal[t] = 0;
+    signal[t] = poiFromFourier[0][1];
 
     for (i = 0; i < poiFromFourier.length; i++) {
       signal[t] +=
