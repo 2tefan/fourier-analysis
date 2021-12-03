@@ -1,6 +1,6 @@
 google.charts.load("current", { packages: ["corechart"] });
 
-number = 11;
+number = 10;
 
 Tin = 20 + 2 * number; // ms
 signalHeight = 5 + number;
@@ -36,7 +36,7 @@ function getDefaultOptions(titleX) {
   };
 }
 
-function getDefaultOptionsFourier(titleX) {
+function getDefaultOptionsFourier(titleX, ymax = signalHeight * 1.5) {
   let options = getDefaultOptions(titleX);
 
   options.scales.x.ticks = {
@@ -53,7 +53,7 @@ function getDefaultOptionsFourier(titleX) {
     tickLength: 10,
   };
 
-  options.scales.y.max = signalHeight * 1.5;
+  options.scales.y.max = ymax;
 
   options.plugins.datalabels = {
     formatter: function (value, context) {

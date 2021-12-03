@@ -13,15 +13,13 @@ function redraw() {
 
 function init() {
   initUnknownSignal();
-  initFourierRect();
+  initFourier();
 }
 
 function initUnknownSignal() {
   const ctx = $("#signal_unknown");
   let values = unknownSignal();
   let options = getDefaultOptions("Zeit [ms]");
-  prepareAnnotations(options);
-  //addAnnotationX(options, "𝜏", Tin, "𝜏 = " + Tin);
 
   let chart = new Chart(ctx, {
     type: "line",
@@ -30,10 +28,13 @@ function initUnknownSignal() {
   });
 }
 
-function initFourierRect() {
-  const ctx = $("#signal_fourier_rect");
-  let values = fourierRect();
-  let options = getDefaultOptionsFourier("Frequenz [kHz]");
+function initFourier() {
+  const ctx = $("#signal_unknown_fourier");
+  let values = fourierUnknownSignal();
+  let options = getDefaultOptionsFourier(
+    "Frequenz [kHz]",
+    (ymax = number * 15)
+  );
 
   let chart = new Chart(ctx, {
     type: "bar",
@@ -43,11 +44,9 @@ function initFourierRect() {
 }
 
 function initReconstructedSignal(poiFromFourier) {
-  const ctx = $("#signal_reconstructed");
+  const ctx = $("#signal_unknown_reconstructed");
   let values = reconstructedSignal(poiFromFourier);
   let options = getDefaultOptions("Zeit [ms]");
-  prepareAnnotations(options);
-  addAnnotationX(options, "𝜏", Tin, "𝜏 = " + Tin);
 
   let chart = new Chart(ctx, {
     type: "line",
@@ -90,13 +89,10 @@ function unknownSignal() {
     label[t] = t;
   }
 
-  $("#signal_plain_rect_period").text(formatFloat(Tin));
-  $("#signal_plain_rect_frequency").text(formatFloat(1000 / Tin));
-  $("#signal_plain_rect_amplitude").text(formatFloat(signalHeight));
   return [label, signal];
 }
 
-function fourierRect() {
+function fourierUnknownSignal() {
   let label = [];
   let fourier = [];
   let ft = getSignal();
@@ -134,7 +130,7 @@ function fourierRect() {
     }
   }
 
-  $("#signal_fourier_rect_measuring_time").text(formatFloat(Tmeasuring));
+  $("#signal_unknown_measuring_time").text(formatFloat(Tmeasuring));
 
   initReconstructedSignal(poi);
   return [label, fourier];
