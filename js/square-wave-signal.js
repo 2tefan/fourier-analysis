@@ -39,10 +39,24 @@ function initFourierRect() {
   });
 }
 
-function getSignal(end = Tmeasuring) {
-  let arr = new Array(end);
+function initReconstructedSignal(poiFromFourier) {
+  const ctx = $("#signal_reconstructed");
+  let values = reconstructedSignal(poiFromFourier);
+  let options = getDefaultOptions("Zeit [ms]");
+  prepareAnnotations(options);
+  addAnnotationX(options, "𝜏", Tin, "𝜏 = " + Tin);
 
-  for (t = 0; t < end; t += samplingInterval) {
+  let chart = new Chart(ctx, {
+    type: "line",
+    data: getData(values[0], values[1]),
+    options: options,
+  });
+}
+
+function getSignal() {
+  let arr = new Array(Tmeasuring);
+
+  for (t = 0; t < Tmeasuring; t += samplingInterval) {
     if (t % Tin < Tin / 2) {
       arr[t] = signalHeight;
     } else {
@@ -55,7 +69,7 @@ function getSignal(end = Tmeasuring) {
 
 function plainRect() {
   let label = new Array(Tmeasuring);
-  let signal = getSignal(Tmeasuring);
+  let signal = getSignal();
 
   for (t = 0; t < Tmeasuring; t += samplingInterval) {
     label[t] = t;
@@ -75,6 +89,8 @@ function fourierRect() {
   let c = new Array(Tmeasuring);
   let phi = new Array(Tmeasuring);
   let k = 0;
+
+  let poi = [];
 
   for (k = 0; k < numberOfHarmonics; k++) {
     a = 0;
@@ -96,26 +112,31 @@ function fourierRect() {
 
     label.push(pos);
     fourier.push(value);
+    if (value > 1) {
+      poi.push([pos, value]);
+    }
   }
 
   $("#signal_fourier_rect_measuring_time").text(formatFloat(Tmeasuring));
 
+  initReconstructedSignal(poi);
   return [label, fourier];
 }
 
-function drawFourierRect() {
-  let data = new google.visualization.DataTable();
-  data.addColumn("number", "t");
-  data.addColumn("number", "Uout");
-  data.addColumn({ role: "annotation" });
+function reconstructedSignal(poiFromFourier) {
+  let label = new Array(Tmeasuring);
+  let signal = new Array(Tmeasuring);
 
-  data.addRows(fourierRect());
+  for (t = 0; t < Tmeasuring; t += samplingInterval) {
+    label[t] = t;
+    signal[t] = 0;
 
-  let options = getDefaultOptionsCurveTypeNone("Fourier Analyse");
+    for (i = 0; i < poiFromFourier.length; i++) {
+      signal[t] +=
+        poiFromFourier[i][1] *
+        Math.sin((poiFromFourier[i][0] * 2 * Math.PI * t) / 1000);
+    }
+  }
 
-  let chart = new google.visualization.ColumnChart(
-    document.getElementById("signal_fourier_rect")
-  );
-
-  chart.draw(data, options);
+  return [label, signal];
 }

@@ -40,9 +40,17 @@ function getDefaultOptionsFourier(titleX) {
   let options = getDefaultOptions(titleX);
 
   options.scales.x.ticks = {
-    callback: function (value, index, values) {
-      return index % 2 ? null : value + " kHz";
+    callback: function (val, index) {
+      return formatFloat(this.getLabelForValue(index)) + " kHz";
     },
+  };
+
+  options.scales.x.grid = {
+    display: true,
+    drawBorder: false,
+    drawOnChartArea: true,
+    drawTicks: true,
+    tickLength: 10,
   };
 
   options.scales.y.max = signalHeight * 1.5;
