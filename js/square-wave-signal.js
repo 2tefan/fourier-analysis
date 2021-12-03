@@ -97,7 +97,7 @@ function fourierRect() {
     a = 0;
     b = 0;
 
-    for (t = 0; t < Tmeasuring; t++) {
+    for (t = 0; t < Tmeasuring; t += samplingInterval) {
       a +=
         (2 / Tmeasuring) * ft[t] * Math.cos(2 * Math.PI * k * t * Tresolution);
       b +=

@@ -2,6 +2,9 @@ window.onresize = redraw;
 window.onload = init;
 Chart.register(ChartDataLabels);
 
+Tmeasuring = 1000; // ms
+Tresolution = 1 / Tmeasuring; // kHz
+
 function redraw() {
   $(".canvas_resize").each(function (i, obj) {
     $(this).css("width", "100%");
@@ -9,16 +12,16 @@ function redraw() {
 }
 
 function init() {
-  initPlainRect();
+  initUnknownSignal();
   initFourierRect();
 }
 
-function initPlainRect() {
-  const ctx = $("#signal_plain_rect");
-  let values = plainRect();
+function initUnknownSignal() {
+  const ctx = $("#signal_unknown");
+  let values = unknownSignal();
   let options = getDefaultOptions("Zeit [ms]");
   prepareAnnotations(options);
-  addAnnotationX(options, "𝜏", Tin, "𝜏 = " + Tin);
+  //addAnnotationX(options, "𝜏", Tin, "𝜏 = " + Tin);
 
   let chart = new Chart(ctx, {
     type: "line",
@@ -54,20 +57,32 @@ function initReconstructedSignal(poiFromFourier) {
 }
 
 function getSignal() {
-  let arr = new Array(Tmeasuring);
+  let f = new Array(Tmeasuring);
 
+  var A = number;
   for (t = 0; t < Tmeasuring; t += samplingInterval) {
-    if (t % Tin < Tin / 2) {
-      arr[t] = signalHeight;
-    } else {
-      arr[t] = 0;
-    }
+    f[t] =
+      10 *
+        A *
+        Math.sin(
+          ((2 * Math.PI * (A + 10)) / 1000) * t + (A * 2 * Math.PI) / 350
+        ) +
+      ((A * 10) / 5) *
+        Math.cos(
+          (A * 2 * Math.PI) / 340 + ((2 * (A + 15) * Math.PI) / 1000) * t
+        ) +
+      ((10 * A) / 2) *
+        Math.sin(
+          ((2 * (20 + A) * Math.PI) / 1000) * t + (A * 2 * Math.PI) / 330
+        ) +
+      5 * A * Math.cos(((2 * Math.PI * 0 * (A + 10)) / 1000) * t) +
+      3 * A * Math.sin(((2 * Math.PI * (A + 5)) / 1000) * t * 0);
   }
 
-  return arr;
+  return f;
 }
 
-function plainRect() {
+function unknownSignal() {
   let label = new Array(Tmeasuring);
   let signal = getSignal();
 
@@ -97,7 +112,7 @@ function fourierRect() {
     a = 0;
     b = 0;
 
-    for (t = 0; t < Tmeasuring; t++) {
+    for (t = 0; t < Tmeasuring; t += samplingInterval) {
       a +=
         (2 / Tmeasuring) * ft[t] * Math.cos(2 * Math.PI * k * t * Tresolution);
       b +=
