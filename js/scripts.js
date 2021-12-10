@@ -1,14 +1,12 @@
-google.charts.load("current", { packages: ["corechart"] });
+const number = 10;
 
-number = 10;
+const Tin = 20 + 2 * number; // ms
+const signalHeight = 5 + number;
+const Tmeasuring = 10 * Tin; // ms
+const Tresolution = 1 / Tmeasuring; // kHz
 
-Tin = 20 + 2 * number; // ms
-signalHeight = 5 + number;
-Tmeasuring = 10 * Tin; // ms
-Tresolution = 1 / Tmeasuring; // kHz
-
-samplingInterval = 1; // ms
-numberOfHarmonics = 100;
+const samplingInterval = 1; // ms
+const numberOfHarmonics = 100;
 
 function getDefaultOptions(titleX) {
   return {
