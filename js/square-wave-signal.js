@@ -39,9 +39,9 @@ function initFourierRect() {
   });
 }
 
-function initReconstructedSignal(poiFromFourier) {
+function initReconstructedSignal(c, phi) {
   const ctx = $("#signal_reconstructed");
-  let values = reconstructedSignal(poiFromFourier);
+  let values = reconstructedSignal(c, phi);
   let options = getDefaultOptions("Zeit [ms]");
   prepareAnnotations(options);
   addAnnotationX(options, "𝜏", Tin, "𝜏 = " + Tin);
@@ -57,7 +57,7 @@ function getSignal() {
   let arr = new Array(Tmeasuring);
 
   for (t = 0; t < Tmeasuring; t += samplingInterval) {
-    if (t % Tin < Tin / 2) {
+    if (t % Tin < Tin / 4) {
       arr[t] = signalHeight;
     } else {
       arr[t] = 0;
@@ -121,22 +121,20 @@ function fourierRect() {
 
   $("#signal_fourier_rect_measuring_time").text(formatFloat(Tmeasuring));
 
-  initReconstructedSignal(poi);
+  initReconstructedSignal(c, phi);
   return [label, fourier];
 }
 
-function reconstructedSignal(poiFromFourier) {
+function reconstructedSignal(c, phi) {
   let label = new Array(Tmeasuring);
   let signal = new Array(Tmeasuring);
 
   for (t = 0; t < Tmeasuring; t += samplingInterval) {
     label[t] = t;
-    signal[t] = poiFromFourier[0][1];
+    signal[t] = 0;
 
-    for (i = 0; i < poiFromFourier.length; i++) {
-      signal[t] +=
-        poiFromFourier[i][1] *
-        Math.sin((poiFromFourier[i][0] * 2 * Math.PI * t) / 1000);
+    for (k = 0; k < numberOfHarmonics; k++) {
+      signal[t] += c[k] * Math.sin(k * 2 * Math.PI * t * Tresolution + phi[k]);
     }
   }
 
