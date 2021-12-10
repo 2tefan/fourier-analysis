@@ -15,10 +15,13 @@ function init() {
 
 function initPlainRect() {
   const ctx = $("#signal_plain_rect");
-  let values = plainRect();
+  let values = plainSymRect(getRectSignal());
   let options = getDefaultOptions("Zeit [ms]");
   prepareAnnotations(options);
   addAnnotationX(options, "𝜏", Tin, "𝜏 = " + Tin);
+  $("#signal_plain_rect_period").text(formatFloat(Tin));
+  $("#signal_plain_rect_frequency").text(formatFloat(1000 / Tin));
+  $("#signal_plain_rect_amplitude").text(formatFloat(signalHeight));
 
   let chart = new Chart(ctx, {
     type: "line",
@@ -29,18 +32,21 @@ function initPlainRect() {
 
 function initFourierRect() {
   const ctx = $("#signal_fourier_rect");
-  let values = fourierRect();
+  let values = fourier(getRectSignal());
   let options = getDefaultOptionsFourier("Frequenz [kHz]");
+
+  $("#signal_fourier_rect_measuring_time").text(formatFloat(Tmeasuring));
 
   let chart = new Chart(ctx, {
     type: "bar",
     data: getData(values[0], values[1]),
     options: options,
   });
+
+  initReconstructedSignal($("#signal_reconstructed"), values[2], values[3]);
 }
 
-function initReconstructedSignal(c, phi) {
-  const ctx = $("#signal_reconstructed");
+function initReconstructedSignal(ctx, c, phi) {
   let values = reconstructedSignal(c, phi);
   let options = getDefaultOptions("Zeit [ms]");
   prepareAnnotations(options);
@@ -53,11 +59,11 @@ function initReconstructedSignal(c, phi) {
   });
 }
 
-function getSignal() {
+function getRectSignal(ratio = 2) {
   let arr = new Array(Tmeasuring);
 
   for (t = 0; t < Tmeasuring; t += samplingInterval) {
-    if (t % Tin < Tin / 4) {
+    if (t % Tin < Tin / ratio) {
       arr[t] = signalHeight;
     } else {
       arr[t] = 0;
@@ -67,76 +73,12 @@ function getSignal() {
   return arr;
 }
 
-function plainRect() {
+function plainSymRect(signal) {
   let label = new Array(Tmeasuring);
-  let signal = getSignal();
 
   for (t = 0; t < Tmeasuring; t += samplingInterval) {
     label[t] = t;
   }
-
-  $("#signal_plain_rect_period").text(formatFloat(Tin));
-  $("#signal_plain_rect_frequency").text(formatFloat(1000 / Tin));
-  $("#signal_plain_rect_amplitude").text(formatFloat(signalHeight));
   return [label, signal];
 }
 
-function fourierRect() {
-  let label = [];
-  let fourier = [];
-  let ft = getSignal();
-  let a = 0;
-  let b = 0;
-  let c = new Array(Tmeasuring);
-  let phi = new Array(Tmeasuring);
-  let k = 0;
-
-  let poi = [];
-
-  for (k = 0; k < numberOfHarmonics; k++) {
-    a = 0;
-    b = 0;
-
-    for (t = 0; t < Tmeasuring; t += samplingInterval) {
-      a +=
-        (2 / Tmeasuring) * ft[t] * Math.cos(2 * Math.PI * k * t * Tresolution);
-      b +=
-        (2 / Tmeasuring) * ft[t] * Math.sin(2 * Math.PI * k * t * Tresolution);
-      c[k] = Math.sqrt(a * a + b * b);
-      phi[k] = Math.atan(a / b);
-    }
-  }
-  c[0] = c[0] / 2;
-
-  for (k = 0; k < numberOfHarmonics; k++) {
-    let value = c[k];
-    let pos = k * Tresolution * 1000;
-
-    label.push(pos);
-    fourier.push(value);
-    if (value > 1) {
-      poi.push([pos, value]);
-    }
-  }
-
-  $("#signal_fourier_rect_measuring_time").text(formatFloat(Tmeasuring));
-
-  initReconstructedSignal(c, phi);
-  return [label, fourier];
-}
-
-function reconstructedSignal(c, phi) {
-  let label = new Array(Tmeasuring);
-  let signal = new Array(Tmeasuring);
-
-  for (t = 0; t < Tmeasuring; t += samplingInterval) {
-    label[t] = t;
-    signal[t] = 0;
-
-    for (k = 0; k < numberOfHarmonics; k++) {
-      signal[t] += c[k] * Math.sin(k * 2 * Math.PI * t * Tresolution + phi[k]);
-    }
-  }
-
-  return [label, signal];
-}
