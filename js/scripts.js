@@ -2,8 +2,8 @@ const number = 10;
 
 const Tin = 20 + 2 * number; // ms
 const signalHeight = 5 + number;
-const Tmeasuring = 10 * Tin; // ms
-const Tresolution = 1 / Tmeasuring; // kHz
+var Tmeasuring = 10 * Tin; // ms
+var Tresolution = 1 / Tmeasuring; // kHz
 
 const samplingInterval = 1; // ms
 const numberOfHarmonics = 100;
@@ -217,11 +217,15 @@ function initFourierRect(ctx, ctx_recon, signal) {
   initReconstructedSignal(ctx_recon, values[2], values[3]);
 }
 
-function initReconstructedSignal(ctx, c, phi) {
+function initReconstructedSignal(ctx, c, phi, withAnnotation = true) {
   let values = reconstructedSignal(c, phi);
   let options = getDefaultOptions("Zeit [ms]");
-  prepareAnnotations(options);
-  addAnnotationX(options, "𝜏", Tin, "𝜏 = " + Tin);
+
+  if(withAnnotation)
+  {
+    prepareAnnotations(options);
+    addAnnotationX(options, "𝜏", Tin, "𝜏 = " + Tin);
+  }
 
   let chart = new Chart(ctx, {
     type: "line",
@@ -231,9 +235,9 @@ function initReconstructedSignal(ctx, c, phi) {
 }
 
 function labelSignal(signal) {
-  let label = new Array(Tmeasuring);
+  let label = new Array(signal.length);
 
-  for (t = 0; t < Tmeasuring; t += samplingInterval) {
+  for (t = 0; t < signal.length; t += samplingInterval) {
     label[t] = t;
   }
   return [label, signal];

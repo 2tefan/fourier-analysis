@@ -17,12 +17,9 @@ function init() {
 
 function initUnknownSignal() {
   const ctx = $("#signal_unknown");
-  let signal = getSignal();
+  let signal = getSignal(Tmeasuring);
   let values = labelSignal(signal);
   let options = getDefaultOptions("Zeit [ms]");
-
-  prepareAnnotations(options);
-  addAnnotationX(options, "𝜏", Tin, "𝜏 = " + Tin);
   
   $("#signal_plain_rect_period").text(formatFloat(Tin));
   $("#signal_plain_rect_frequency").text(formatFloat(1000 / Tin));
@@ -44,7 +41,7 @@ function initUnknownSignal() {
 }
 
 function initFourier(ctx, ctx_recon, signal) {
-  let values = fourier(signal);
+  let values = fourier(signal, Tmeasuring);
   let options = getDefaultOptionsFourier(
     "Frequenz [kHz]",
     (ymax = number * 15)
@@ -56,15 +53,15 @@ function initFourier(ctx, ctx_recon, signal) {
     options: options,
   });
  
-  initReconstructedSignal(ctx_recon, values[2], values[3]);
+  initReconstructedSignal(ctx_recon, values[2], values[3], false);
 }
 
 
-function getSignal() {
-  let f = new Array(Tmeasuring);
+function getSignal(measure = Tmeasuring) {
+  let f = new Array(measure);
 
   var A = number;
-  for (t = 0; t < Tmeasuring; t += samplingInterval) {
+  for (t = 0; t < measure; t += samplingInterval) {
     f[t] =
       10 *
         A *
