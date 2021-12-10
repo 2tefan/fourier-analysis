@@ -189,3 +189,52 @@ function reconstructedSignal(c, phi) {
 
   return [label, signal];
 }
+
+function getRectSignal(ratio = 2) {
+  let arr = new Array(Tmeasuring);
+
+  for (t = 0; t < Tmeasuring; t += samplingInterval) {
+    if (t % Tin < Tin / ratio) {
+      arr[t] = signalHeight;
+    } else {
+      arr[t] = 0;
+    }
+  }
+
+  return arr;
+}
+
+function initFourierRect(ctx, ctx_recon, signal) {
+  let values = fourier(signal);
+  let options = getDefaultOptionsFourier("Frequenz [kHz]");
+
+  let chart = new Chart(ctx, {
+    type: "bar",
+    data: getData(values[0], values[1]),
+    options: options,
+  });
+
+  initReconstructedSignal(ctx_recon, values[2], values[3]);
+}
+
+function initReconstructedSignal(ctx, c, phi) {
+  let values = reconstructedSignal(c, phi);
+  let options = getDefaultOptions("Zeit [ms]");
+  prepareAnnotations(options);
+  addAnnotationX(options, "𝜏", Tin, "𝜏 = " + Tin);
+
+  let chart = new Chart(ctx, {
+    type: "line",
+    data: getData(values[0], values[1]),
+    options: options,
+  });
+}
+
+function labelSignal(signal) {
+  let label = new Array(Tmeasuring);
+
+  for (t = 0; t < Tmeasuring; t += samplingInterval) {
+    label[t] = t;
+  }
+  return [label, signal];
+}
