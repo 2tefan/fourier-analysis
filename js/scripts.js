@@ -135,15 +135,11 @@ function getKp() {
 }
 
 function fourier(ft, measuring = Tmeasuring) {
-  let label = [];
-  let fourier = [];
   let a = 0;
   let b = 0;
-  let c = new Array(measuring);
-  let phi = new Array(measuring);
-  let k = 0;
-
-  let poi = [];
+  let c = new Array(numberOfHarmonics);
+  let phi = new Array(numberOfHarmonics);
+  let position = new Array(numberOfHarmonics);
 
   for (k = 0; k < numberOfHarmonics; k++) {
     a = 0;
@@ -154,24 +150,14 @@ function fourier(ft, measuring = Tmeasuring) {
         (2 / measuring) * ft[t] * Math.cos(2 * Math.PI * k * t * Tresolution);
       b +=
         (2 / measuring) * ft[t] * Math.sin(2 * Math.PI * k * t * Tresolution);
-      c[k] = Math.sqrt(a * a + b * b);
-      phi[k] = Math.atan(a / b);
     }
+    c[k] = Math.sqrt(a * a + b * b);
+    phi[k] = Math.atan(a / b);
+    position[k] = k * Tresolution * 1000;
   }
   c[0] = c[0] / 2;
 
-  for (k = 0; k < numberOfHarmonics; k++) {
-    let value = c[k];
-    let pos = k * Tresolution * 1000;
-
-    label.push(pos);
-    fourier.push(value);
-    if (value > 1) {
-      poi.push([pos, value]);
-    }
-  }
-
-  return [label, fourier, c, phi];
+  return [c, phi, position];
 }
 
 function reconstructedSignal(c, phi) {
@@ -210,19 +196,18 @@ function initFourierRect(ctx, ctx_recon, signal) {
 
   let chart = new Chart(ctx, {
     type: "bar",
-    data: getData(values[0], values[1]),
+    data: getData(values[2], values[0]),
     options: options,
   });
 
-  initReconstructedSignal(ctx_recon, values[2], values[3]);
+  initReconstructedSignal(ctx_recon, values[0], values[1]);
 }
 
 function initReconstructedSignal(ctx, c, phi, withAnnotation = true) {
   let values = reconstructedSignal(c, phi);
   let options = getDefaultOptions("Zeit [ms]");
 
-  if(withAnnotation)
-  {
+  if (withAnnotation) {
     prepareAnnotations(options);
     addAnnotationX(options, "𝜏", Tin, "𝜏 = " + Tin);
   }

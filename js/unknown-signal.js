@@ -49,11 +49,11 @@ function initFourier(ctx, ctx_recon, signal) {
 
   let chart = new Chart(ctx, {
     type: "bar",
-    data: getData(values[0], values[1]),
+    data: getData(values[2], values[0]),
     options: options,
   });
  
-  initReconstructedSignal(ctx_recon, values[2], values[3], false);
+  initReconstructedSignal(ctx_recon, values[0], values[1], false);
 }
 
 
